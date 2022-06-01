@@ -22,7 +22,7 @@ const isAvailable = () => {
   }
 };
 
-const callBackPromiseAvailable = (resolve, reject) => {
+const checkAvailable = (resolve, reject) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (isAvailable()) {
@@ -34,7 +34,7 @@ const callBackPromiseAvailable = (resolve, reject) => {
   });
 };
 
-const callBackPromiseStock = (resolve, reject) => {
+const checkStock = (resolve, reject) => {
   return new Promise((resolve, reject) => {
     state.available = true;
     if (isStockReady()) {
@@ -47,7 +47,15 @@ const callBackPromiseStock = (resolve, reject) => {
   });
 };
 
-const callBackPromiseMakeCoffee = (resolve, reject) => {
+const brewCoffee = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("brew the ingredients");
+    }, 1000);
+  });
+};
+
+const makeCoffee = (resolve, reject) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("Coffee is made");
@@ -55,22 +63,15 @@ const callBackPromiseMakeCoffee = (resolve, reject) => {
   });
 };
 
-const makeCoffee = () => {
-  callBackPromiseAvailable()
-    .then((resolve) => {
-      console.log(resolve);
-      return callBackPromiseStock();
-    })
-    .then((resolve) => {
-      console.log(resolve);
-      return callBackPromiseMakeCoffee();
-    })
-    .then((resolve) => {
-      console.log(resolve);
-    })
-    .catch((reject) => {
-      console.log(reject);
-    });
+const makeCoffeeComplete = async () => {
+  try {
+    await checkAvailable();
+    await checkStock();
+    await Promise.all([brewCoffee(), makeCoffee()]);
+    console.log("Coffee is made");
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-makeCoffee();
+makeCoffeeComplete();
