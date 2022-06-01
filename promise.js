@@ -1,77 +1,31 @@
-const state = {
-  stock: {
-    coffeeBeans: 5000,
-    water: 20000,
-  },
-  available: false,
-};
-
-const isStockReady = () => {
-  if (state.stock.coffeeBeans > 500 && state.stock.water > 200) {
-    return true;
-  } else {
-    return false;
+class NetworkError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "NetworkError";
   }
-};
+}
 
-const isAvailable = () => {
-  if (!state.available) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-const checkAvailable = (resolve, reject) => {
+// TODO: 1
+const fetchingUserFromInternet = (isOffline) => {
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (isAvailable()) {
-        resolve("Coffee is available");
-      } else {
-        reject("Coffee is not available");
-      }
-    }, 1000);
-  });
-};
-
-const checkStock = (resolve, reject) => {
-  return new Promise((resolve, reject) => {
-    state.available = true;
-    if (isStockReady()) {
-      resolve("Coffee is to make, because we have enough ingredients");
+    if (!isOffline) {
+      resolve({ name: "John", age: 18 });
     } else {
-      reject(
-        "Coffee is not ready to make, because we don't have enough ingredients"
-      );
+      reject(new NetworkError("Gagal mendapatkan data dari internet"));
     }
   });
 };
 
-const brewCoffee = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve("brew the ingredients");
-    }, 1000);
-  });
-};
-
-const makeCoffee = (resolve, reject) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve("Coffee is made");
-    }, 2000);
-  });
-};
-
-const makeCoffeeComplete = async () => {
+// TODO: 2
+const gettingUserName = async () => {
   try {
-    await checkAvailable();
-    await checkStock();
-    await Promise.all([brewCoffee(), makeCoffee()]);
-    console.log("Coffee is made");
-  } catch (error) {
-    console.log(error);
+    const ok = await fetchingUserFromInternet(false);
+    return ok.name;
+  } catch (NetworkError) {
+    return NetworkError;
   }
 };
 
-makeCoffeeComplete();
+gettingUserName().then((name) => {
+  console.log(name);
+});
