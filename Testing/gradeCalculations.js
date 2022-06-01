@@ -1,25 +1,15 @@
-const averageExams = (valuesExam) => {
-  const numberValidation = valuesExam.every((exam) => typeof exam === "number");
-  if (!numberValidation) throw Error("please input number");
+function findMin(a, b, c) {
+  let minValue = 0;
 
-  const sumValues = valuesExam.reduce(
-    (accumulator, currentValue) => accumulator + currentValue,
-    0
-  );
-  return sumValues / valuesExam.length;
-};
-
-const isStudentPassExam = (valuesExam, name) => {
-  const minValues = 75;
-  const average = averageExams(valuesExam);
-
-  if (average > minValues) {
-    console.log(`${name} pass the exams`);
-    return true;
+  if (a < b) {
+    minValue = a;
+  } else if (b < c) {
+    minValue = b;
   } else {
-    console.log(`${name} fail the exams`);
-    return false;
+    minValue = c;
   }
-};
 
-module.exports = { averageExams, isStudentPassExam };
+  return minValue;
+}
+
+module.exports = { findMin };
